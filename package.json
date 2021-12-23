@@ -13,5 +13,12 @@
     "@ethereumjs/tx": "^3.4.0",
     "ethereumjs-tx": "^2.1.2",
     "web3": "^1.6.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.5.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "prettier": "2.5.1"
   }
 }
