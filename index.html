@@ -24,31 +24,16 @@
 
     let web3;
 
-    try {
-      if (typeof web3 !== 'undefined') {
-        web3 = new web3(web3.currentProvider)
-      } else {
-        console.log("inside else")
-        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"))
-      }
-    } catch (error) {
-      alert(error)
+    // try {
+    if (typeof web3 !== 'undefined') {
+      web3 = new web3(web3.currentProvider)
+    } else {
+      console.log("inside else")
+      web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/9ba177f598b0492ab7ebdf455e50f86b"))
     }
 
-    if (window.ethereum) {
-
-      try {
-        const accounts = window.ethereum.request({ method: 'eth_requestAccounts' });
-      } catch (error) {
-        if (error.code === 4001) {
-          // User rejected request
-        }
-        setError(error);
-      }
-    };
-
     // Get the contract address
-    var RemixContract = new web3.eth.Contract([
+    var ABI = [
       {
         constant: false,
         inputs: [
@@ -77,18 +62,39 @@
         stateMutability: 'view',
         type: 'function',
       },
-    ]);
-
+    ];
+    var contractAddress = '0x2B363DE54C0961269f1FedA0Dd2a855010C87434'
+    var senderAddress = '0x0b66deDf4D5a8eEc1595Ed435D2A9a1FFeb15832'
     // Get the contract abi
-    RemixContract.options.address = '0x2C2a24fc455e97cE066628773c5d8512ED6e3459';
-    var myContractMethods = RemixContract.methods;
-    console.log(myContractMethods)
+    // RemixContract.options.address = '0x2B363DE54C0961269f1FedA0Dd2a855010C87434';
+    var RemixContract = new web3.eth.Contract(ABI, contractAddress, { from: senderAddress });
+    console.log(RemixContract)
 
     const postMessage = function postMessage() {
       let message = document.getElementById('message').value;
-      myContractMethods.setMessage(message).send({ from: ethereum.selectedAddress }, (err, txid) => {
-        console.log(`${txid} successfully written to blockchain`);
-      });
+      RemixContract.methods.setMessage(message).send((err, txid) => {
+        console.log(err)
+        console.log(txid)
+      })
+      // myContractMethods.setMessage(message).send({ from: web3.eth.defaultAccount }, (err, txid) => {
+      //   console.log(`${txid} successfully written to blockchain`);
+      // });
+      // //Does not create transaction due to eth_sendTransaction
+      // myContractMethods.setMessage(message).send({ from: ethereum.selectedAddress })
+      // myContractMethods.setMessage(message).send({ from: ethereum.selectedAddress }).on('transactioHash', (hash) => {
+      //   console.log(hash)
+      // })
+      //   .on('confirmation', (confNo, receipt) => {
+      //     console.log(confNo)
+      //     console.log(receipt)
+      //   })
+      //   .on('receipt', (receipt) => {
+      //     console.log(receipt)
+      //   })
+      //   .on('error', (error, receipt) => {
+      //     console.log(error)
+      //     console.log(receipt)
+      //   })
     }
 
   </script>
